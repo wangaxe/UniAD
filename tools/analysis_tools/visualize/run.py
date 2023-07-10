@@ -2,6 +2,8 @@ import cv2
 import torch
 import argparse
 import os
+import sys
+sys.path.append("/home/fu/workspace/UniAD")
 import glob
 import numpy as np
 import mmcv
