@@ -240,15 +240,6 @@ model.eval()
 #            
 ####################################################
 
-# print(args.show) # False
-# print(args.show_dir) # ./projects/work_dirs/stage1_track_map/base_track_map/
-# print(type(dataset)) # <class 'projects.mmdet3d_plugin.datasets.nuscenes_e2e_dataset.NuScenesE2EDataset'>
-
-# print(dataset.test_mode)
-# print(data_arg['pipeline'])
-# print(tmp_data.keys())
-# print(tmp_data['img_metas'][0])
-
 
 def get_pred_boxes_single_frame(nusc_box,
                                 sample_token,
@@ -453,25 +444,6 @@ simplied_class_names = ['car', 'truck', 'bus',
 
 gt_info = (gt_boxes, simplied_class_names)
 
-# tmp_data = dataset[0]
-# print(tmp_data['img_metas'][0]['scene_token'])
-# for key, value in tmp_data.items():
-#     if "gt" in key:
-#         print(key, value)
-
-# img_tensor = get_img_tensor(tmp_data)
-# print(img_tensor.shape) # img_tensor.shape = [1, 6, 3, 928, 1600]
-# print(img_tensor.squeeze()[1].shape)
-
-# print(img_tensor.squeeze()[1].min())
-# print(img_tensor.squeeze()[1].max())
-# img_tensor_1 = normlise_img(img_tensor.squeeze()[1])
-# print(img_tensor_1.max())
-# print(img_tensor_1.min())
-# save_image(img_tensor.squeeze()[1], './verification/test.png')
-# save_image(img_tensor_1, './verification/test_1.png')
-
-
 query_model = copy.deepcopy(model)
 
 for i, data in enumerate(data_loader):
@@ -494,17 +466,6 @@ for i, data in enumerate(data_loader):
     end_time = time.time()
     print(f"{(end_time-start_time)/60:.2f} min")
 
-    # print(f'##################### Start query {i} #####################')
-    # for _ in range(3): 
-    #     tmp_data = copy.deepcopy(data)
-    #     query_model.module = copy.deepcopy(model.module)
-    #     with torch.no_grad():
-    #         query_result = query_model(return_loss=False, rescale=True, **tmp_data)
-    #     _dist = results2dist(query_result[0],
-    #                         gt_boxes,
-    #                         simplied_class_names, verbose=True)
-    #     print(_dist)
-    # print(f'#####################  End query {i}  #####################')
     ori_img = OpticalVerification.get_img_tensor(data)
     # ori_transf = np.array([0, 1., 1.]*6)
     tmp_img = OpticalVerification.functional_perturb(ori_img,direct_solver.optimal_result())
@@ -517,23 +478,8 @@ for i, data in enumerate(data_loader):
                             simplied_class_names, verbose=True)
     print(_dist)
 
-    # query_model.module.prev_frame_info = copy.deepcopy(model.module.prev_frame_info)
-    # query_model.module.prev_bev = copy.deepcopy(model.module.prev_bev)
-
     if i > 2: break
 
-
-####################################################
-#            
-####################################################
-# img = copy.deepcopy(get_img_tensor(tmp_data)).squeeze()
-# trans_img = optical_transform(img, [0.1]*4)
-# # print(get_img_tensor(tmp_data).shape)
-# # for i, data in enumerate(data_loader):
-# #     with torch.no_grad():
-# #         result = model(return_loss=False, rescale=True, **data)
-# trans_data = copy.deepcopy(tmp_data)
-# trans_data['img'][0].data[0] = trans_img
 
 
 ####################################################
